@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+import java.util.Random;
 /**
  * A class to hold details of audio tracks.
  * Individual tracks may be played.
@@ -11,11 +11,18 @@ public class MusicOrganizer
 {
     // An ArrayList for storing music tracks.
     private ArrayList<Track> tracks;
+    
     // A player for the music tracks.
     private MusicPlayer player;
     // A reader that can read music files and load them as tracks.
     private TrackReader reader;
-
+    //creates a random number. Used for RandomTrack and RandomAllTracks methods
+    Random randomTrack = new Random();
+    //ArrayList to keep track of played tracks
+    ArrayList<String> played = new ArrayList<String>();
+    
+    
+    
     /**
      * Create a MusicOrganizer
      */
@@ -30,13 +37,56 @@ public class MusicOrganizer
     }
     
     /**
-     * Add a track file to the collection.
+     * Add a track file to the colion.
      * @param filename The file name of the track to be added.
      */
     public void addFile(String filename)
     {
         tracks.add(new Track(filename));
     }
+    /** 
+     * Plays a random sample.
+     * if you add tracks you'll need to change the nextInt value.
+     * Could be made into a parameter.
+     */
+    public void playRandomTrack()
+    {
+            int value=randomTrack.nextInt(4);
+            if(indexValid(value)) {
+            Track track = tracks.get(value);
+            player.playSample(track.getFilename());
+            System.out.println("Now playing: " + track.getArtist() + " - " + track.getTitle());
+        }
+    }
+    
+    //Play all tracks exactly one.
+    // Uses a for loop and an Array
+    public void playRandomAllTracks()
+    {
+     //For Loop. If/Else. If checks if track name present in array already.
+     //Else plays the track if it is not present.
+     for (int playedTrack =0; playedTrack <4;)
+     {   
+     //RNG Generates number. Track grabs the track.
+     int value=randomTrack.nextInt(4);
+     System.out.println(value);
+     Track track = tracks.get(value);
+    String selectedTrack = track.getFilename();
+    
+    //Does the array contain our track name
+    //If not play track. Print name. add to array. increase number by one.
+    if (played.contains(selectedTrack)==false)
+     {
+         player.playSample(track.getFilename());
+         System.out.println("Playing: "+track.getFilename());
+         played.add(track.getFilename());
+         playedTrack++;
+     }
+     
+    }
+}
+    
+    
     
     /**
      * Add a track to the collection.
@@ -59,6 +109,10 @@ public class MusicOrganizer
             System.out.println("Now playing: " + track.getArtist() + " - " + track.getTitle());
         }
     }
+    
+    
+    
+    
     
     /**
      * Return the number of tracks in the collection.
